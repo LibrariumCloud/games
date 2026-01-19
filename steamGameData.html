@@ -13,6 +13,21 @@
           var sParameterName = sURLVariables[i].split('=');
           if (sParameterName[0] == "appId")
           {
+              const url = `https://store.steampowered.com/api/appdetails?appids=${appId}&l=${language}`;
+    
+              try {
+                  const response = await fetch(url);
+                  const data = await response.json();
+                  
+                  if (data[appId].success) {
+                      return bodyElement.innerHTML = data[appId].data;
+                  } else {
+                      throw new Error('Игра не найдена');
+                  }
+              } catch (error) {
+                  bodyElement.innerHTML = "error...";
+                  return;
+              }
               bodyElement.innerHTML = sParameterName[1];
               return;
           }
