@@ -13,7 +13,7 @@
           var sParameterName = sURLVariables[i].split('=');
           if (sParameterName[0] == "appId")
           {
-              const url = `https://store.steampowered.com/api/appdetails?appids=${appId}&l=${language}`;
+              const url = `https://store.steampowered.com/api/appdetails?appids=${sParameterName[1]}&l=russian`;
     
               try {
                   const response = await fetch(url);
@@ -28,8 +28,6 @@
                   bodyElement.innerHTML = "error...";
                   return;
               }
-              bodyElement.innerHTML = sParameterName[1];
-              return;
           }
       }
       bodyElement.innerHTML = "error...";
