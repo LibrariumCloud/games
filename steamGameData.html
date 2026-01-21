@@ -18,6 +18,7 @@
               
               if (steamData[appId]?.success) {
                   const game = steamData[appId].data;
+                  console.log(game);
                   return {
                       name: game.name,
                       desc: game.short_description,
