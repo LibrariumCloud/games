@@ -4,34 +4,37 @@
   </body>
   <script>
     window.onload = async function(){
-      var bodyElement = document.querySelector("body");
-      
-      var sPageURL = window.location.search.substring(1);
-      var sURLVariables = sPageURL.split('&');
-      for (var i = 0; i < sURLVariables.length; i++)
-      {
-          var sParameterName = sURLVariables[i].split('=');
-          if (sParameterName[0] == "appId")
-          {
-              const url = `https://store.steampowered.com/api/appdetails?appids=${sParameterName[1]}&l=russian`;
-    
-              try {
-                  const response = await fetch(url);
-                  const data = await response.json();
-                  
-                  if (data[appId].success) {
-                      return bodyElement.innerHTML = data[appId].data;
-                  } else {
-                      throw new Error('Игра не найдена');
-                  }
-              } catch (error) {
-                  bodyElement.innerHTML = "error...";
-                  return;
+      // ultra-simple-steam.js
+      async function getSteamGame(appId) {
+          // Используем этот URL - он работает без VPN
+          const url = `https://api.allorigins.win/get?url=${encodeURIComponent(
+              `https://store.steampowered.com/api/appdetails?appids=${appId}&l=russian`
+          )}`;
+          
+          try {
+              const response = await fetch(url);
+              const data = await response.json();
+              const steamData = JSON.parse(data.contents);
+              
+              if (steamData[appId]?.success) {
+                  const game = steamData[appId].data;
+                  return {
+                      name: game.name,
+                      desc: game.short_description,
+                      image: game.header_image,
+                      price: game.price_overview?.final_formatted || 'Free',
+                      devs: game.developers || []
+                  };
               }
+          } catch (error) {
+              console.error('Error:', error);
+              return null;
           }
       }
-      bodyElement.innerHTML = "error...";
-      return;
+      
+      // Использование:
+      сonst game = await getSteamGame(105600);
+      console.log(game.name);
     }
   </script>
 </html>
